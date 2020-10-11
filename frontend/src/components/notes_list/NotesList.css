@@ -1,0 +1,30 @@
+.main {
+    background-color: #FE621E;
+}
+
+.logout-icon {
+    color: white;
+    transform: rotate(180deg);
+}
+
+.header-div {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header {
+    padding-top: 15px;
+    color: white;
+    padding-left: 10px;
+}
+
+.view-buttons {
+    padding-top: 20px;
+    padding-right: 10px;
+}
+
+@media only screen and (max-height: 500px) {
+    .main { padding-bottom: 15px; }
+}

@@ -1,0 +1,26 @@
+.container-div {
+    background-color: white;
+    margin: 10px 10px 0px 10px;
+    padding: 10px 20px;
+    border-radius: 10px;
+}
+
+.list-note {
+    overflow: hidden;
+    padding: 5px 0px;
+}
+
+.list-note:not(:last-child) {
+    border-bottom: 1px solid lightgray;
+}
+
+.time {
+    margin-right: 10px;
+}
+
+.preview {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    padding-right: 10px;
+}

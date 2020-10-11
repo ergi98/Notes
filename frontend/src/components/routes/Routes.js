@@ -1,0 +1,31 @@
+import React from 'react'
+import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom"
+
+// Components
+import EditNote from '../edit_note/EditNote'
+import NotesList from '../notes_list/NotesList'
+import Landing from '../landing/Landing'
+
+function Routes() {
+
+    const isAuthenticated = true
+    
+    return (
+        <BrowserRouter>
+        <main>
+                <Switch>
+                    <Route path="/" exact component={Landing} />
+                    {
+                        isAuthenticated ?
+                            <>
+                                <Route path="/notes" exact component={NotesList} />
+                            </> :
+                            <Redirect to="/" />
+                    }
+                </Switch>
+        </main>
+    </BrowserRouter>
+    )
+}
+
+export default Routes
