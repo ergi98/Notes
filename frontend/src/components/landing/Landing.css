@@ -15,10 +15,11 @@
 }
 
 .logo {
-    width: 50px;
+    width: 100px;
 }
 
 .welcome-header {
+    color: white;
     font-size: 2.3rem;
 }
 
@@ -27,6 +28,7 @@
 }
 
 .login, .signup {
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     width: 90%;
@@ -42,15 +44,44 @@
 .login-form, .signup-form {
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
     width: 90%;
-    height: 35vh;
+    height: 45vh;
     margin: 0 auto;
 }
 
-.signup-form {
-    height: 45vh;
+.forgot-link {
+    text-decoration: none;
+    text-align: center;
 }
+
+.login-form {
+    animation: login 0.5s ease-in-out forwards;
+    justify-content: space-around;
+}
+
+.signup-form {
+    animation: signup 0.5s ease-in-out forwards;
+    justify-content: space-evenly;
+}
+
+@keyframes login {
+    from {
+        transform: translateX(-100%)
+    }
+    to {
+        transform: translateX(0%)
+    }
+}
+
+@keyframes signup {
+    from {
+        transform: translateX(100%)
+    }
+    to {
+        transform: translateX(0%)
+    }
+}
+
 
 .user-field, .pwd-field {
     width: 100% !important;
@@ -66,6 +97,7 @@
 }
 
 .state-buttons {
+    animation: active 0.5s ease-in-out forwards;
     background-color: transparent;
     border: none;
     outline: none;
@@ -88,6 +120,32 @@
     background-color: #b4ada6!important;
     color: white;
     font-size: 0.9rem;
+    animation: inactive 0.3s ease-in-out forwards;
+}
+
+@keyframes active {
+    from {
+        background-color: #b4ada6!important;
+        color: white;
+    }
+    to {
+        background-color: transparent;
+        color: black;
+    }
+}
+
+
+@keyframes inactive {
+    from {
+        background-color: transparent;
+        color: black;
+        /* font-size: 1rem; */
+    }
+    to {
+        background-color: #b4ada6!important;
+        color: white;
+        /* font-size: 0.9rem;  */
+    }
 }
 
 .state-buttons::-moz-focus-inner {

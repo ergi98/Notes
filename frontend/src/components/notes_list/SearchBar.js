@@ -14,7 +14,10 @@ import AddCircleSharpIcon from '@material-ui/icons/AddCircleSharp'
 
 function SearchBar(props) {
 
+    const uniqid = require('uniqid')
+    const user = useSelector((state) => state.user.username)
     const allNotes = useSelector((state) => state.user.notes)
+
     let interval
 
     function filterNotes(event) {
@@ -24,6 +27,19 @@ function SearchBar(props) {
             let filtered = allNotes.filter(note => note.title.toLowerCase().includes(text.toLowerCase()))
             props.setNotes(filtered)
         }, 250, text)
+    }
+
+    function addNote() {
+        let newNote = {
+            id: uniqid(),
+            author: user,
+            text: '',
+            title: '',
+            date: new Date().toLocaleDateString('en-GB'),
+            time: new Date().toTimeString().split(' ')[0]
+        }
+
+        props.setOpenedNote(newNote)
     }
 
     return (
@@ -39,7 +55,7 @@ function SearchBar(props) {
                     onChange={filterNotes}
                 />
             </Paper>
-            <IconButton aria-label="menu">
+            <IconButton aria-label="menu" onClick={addNote}>
                 <AddCircleSharpIcon style={{color:"White"}} fontSize="large"/>
             </IconButton>
         </div>

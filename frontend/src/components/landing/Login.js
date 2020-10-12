@@ -174,7 +174,8 @@ function Login() {
                             />
                             <Button className="my-button" type="submit" variant="contained" color="secondary">
                                 LOGIN
-                </Button>
+                            </Button>
+                            <a className="forgot-link" href="forgot-password">Forgot Password?</a>
                         </form>
                     )
             }

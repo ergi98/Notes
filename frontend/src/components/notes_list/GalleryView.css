@@ -30,7 +30,12 @@
     text-align: left;
 }
 
-.time {
+.grid-title {
+    color: rgb(247, 247, 247);
+}
+
+.grid-time {
     font-weight: 600;
     font-size: 0.8rem;
+    color: white;
 }

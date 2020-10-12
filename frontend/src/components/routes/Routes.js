@@ -2,7 +2,6 @@ import React from 'react'
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom"
 
 // Components
-import EditNote from '../edit_note/EditNote'
 import NotesList from '../notes_list/NotesList'
 import Landing from '../landing/Landing'
 

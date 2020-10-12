@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux'
 import SearchBar from './SearchBar'
 import ListView from './ListView'
 import GalleryView from './GalleryView'
+import EditNote from '../edit_note/EditNote'
 
 // Icons
 import ViewModuleSharpIcon from '@material-ui/icons/ViewModuleSharp'
@@ -26,36 +27,49 @@ function NotesList() {
     const [view, setView] = useState("list")
     const [notes, setNotes] = useState(allNotes)
     const [openendNote, setOpenedNote] = useState(undefined)
+
+    function logout() {
+        // TODO - Make API call
+        window.location = '/'
+    }
     
     return (
         <div className="main">
-            <div className="header-div">
-                <IconButton aria-label="logout button">
-                    <ExitToAppIcon className="logout-icon" fontSize="large"  />
-                </IconButton>
-                <h1 className="header">My Notes</h1>
-                <ButtonGroup className="view-buttons" disableElevation variant="contained">
-                    <Button
-                        variant="contained"
-                        color={ view ==="gallery"? "default" : "secondary" }
-                        onClick={() => setView("list")}
-                        startIcon={<ReorderSharpIcon />}
-                    >List</Button>
-                    <Button
-                        variant="contained"
-                        color={ view ==="list"? "default" : "secondary" }
-                        onClick={() => setView("gallery")}
-                        startIcon={<ViewModuleSharpIcon />}
-                    >Gallery</Button>
-                </ButtonGroup>
-            </div>
-            <SearchBar setNotes={setNotes}/>
-            { 
-                view === "list"? 
-                    <ListView notes={notes} setOpenedNote={setOpenedNote}/> 
-                    : 
-                    <GalleryView notes={notes} setOpenedNote={setOpenedNote}/> 
+            {
+                openendNote !== undefined?
+                    <EditNote note={openendNote} setOpenedNote={setOpenedNote} />
+                    :
+                    <React.Fragment>
+                        <div className="header-div">
+                            <IconButton aria-label="logout button" onClick={logout}>
+                                <ExitToAppIcon className="logout-icon" fontSize="large"/>
+                            </IconButton>
+                            <h1 className="header">My Notes</h1>
+                            <ButtonGroup className="view-buttons" disableElevation variant="contained">
+                                <Button
+                                    variant="contained"
+                                    color={ view ==="gallery"? "default" : "secondary" }
+                                    onClick={() => setView("list")}
+                                    startIcon={<ReorderSharpIcon />}
+                                >List</Button>
+                                <Button
+                                    variant="contained"
+                                    color={ view ==="list"? "default" : "secondary" }
+                                    onClick={() => setView("gallery")}
+                                    startIcon={<ViewModuleSharpIcon />}
+                                >Gallery</Button>
+                            </ButtonGroup>
+                        </div>
+                        <SearchBar setNotes={setNotes} setOpenedNote={setOpenedNote}/>
+                        {
+                            view === "list"? 
+                                <ListView notes={notes} setOpenedNote={setOpenedNote}/> 
+                                : 
+                                <GalleryView notes={notes} setOpenedNote={setOpenedNote}/>
+                        } 
+                    </React.Fragment>
             }
+     
         </div>
     )
 }

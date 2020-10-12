@@ -18,6 +18,7 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 isAuthenticated: true,
+                username: action.payload.username,
                 jwt: action.payload.jwt,
                 notes: action.payload.notes
             }

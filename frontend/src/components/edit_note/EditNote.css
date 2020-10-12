@@ -1,0 +1,34 @@
+.note-holder {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: white;
+}
+
+.action-div {
+    display: flex;
+    align-items: center;
+}
+
+.noted-date {
+    text-align: center;
+    flex-grow: 1;
+    font-weight: bold;
+}
+
+.workspace {
+    flex: 1;
+    overflow: auto;
+}
+
+[contenteditable] {
+    outline: 0px solid transparent;
+}
+
+.back-txt {
+    font-size: 1rem;
+}
+
+.ql-editor {
+    font-size: 1.4rem;
+}
