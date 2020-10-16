@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import './EditNote.css'
 
 // Material UI
@@ -14,7 +14,26 @@ import 'react-quill/dist/quill.snow.css'
 
 function EditNote(props) {
 
-    const [text, setText] = useState(props.note.text)
+    const [text, setText] = useState('')
+    const [show, setShow] = useState(false);
+    const [hide, setHide] = useState(true);
+    const timeoutRef = useRef(null);
+
+    useEffect(() => {
+      if (props.note !== undefined) {
+        setText(props.note.text);
+        setShow(true);
+        setHide(false);
+        clearTimeout(timeoutRef.current);
+      }
+      else {
+        setShow(false);
+        timeoutRef.current = setTimeout(() => setHide(true), 1000);
+      }
+    }, [props.note, text]);
+  
+    /* unmount cleanup */
+    useEffect(() => () => clearTimeout(timeoutRef.current), []);
 
     function closeNote() {
         if(props.note.text !== text){
@@ -34,25 +53,29 @@ function EditNote(props) {
     }
 
     return (
-        <div className="note-holder">
-            <div className="action-div">
-                <IconButton aria-label="go-back" onClick={closeNote}>
-                    <ArrowBackSharpIcon className="back-icon"/>
-                </IconButton>
-                <label className="noted-date">{props.note.date}</label>
-                <IconButton aria-label="delete-note" onClick={deleteNote}>
-                    <DeleteIcon className="delete-note-icon"/>
-                </IconButton>
-            </div>
-            <ReactQuill 
-                className="workspace" 
-                theme={"snow"}
-                placeholder="Write something ..."
-                defaultValue={props.note.text}
-                onChange={(content) => setText(content)}
-                onBlur={saveNote}
-            />
-        </div>
+        <React.Fragment>
+            {
+                !hide?
+                <div className={`note-holder ${show? "" : "close"}`}>
+                    <div className="action-div">
+                        <IconButton aria-label="go-back" onClick={closeNote}>
+                            <ArrowBackSharpIcon className="back-icon"/>
+                        </IconButton>
+                        <label className="noted-date">{props.note?.date}</label>
+                        <IconButton aria-label="delete-note" onClick={deleteNote}>
+                            <DeleteIcon className="delete-note-icon"/>
+                        </IconButton>
+                    </div>
+                    <ReactQuill 
+                        className="workspace" 
+                        theme={"snow"}
+                        placeholder="Write something ..."
+                        value={text}
+                        onBlur={saveNote}
+                    />
+                </div> : null
+            }
+        </React.Fragment>
     )
 }
 

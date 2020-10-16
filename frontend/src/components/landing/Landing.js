@@ -1,16 +1,51 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './Landing.css'
 
 // Components
 import Login from './Login'
 import Signup from './Signup'
 
+// Redux
+import { useSelector } from 'react-redux'
+
+// Material UI
+import Snackbar from '@material-ui/core/Snackbar'
+import Alert from '@material-ui/lab/Alert'
+import Slide from '@material-ui/core/Slide'
+
+function TransitionUp(props) {
+    return <Slide {...props} direction="up" />
+}
+
 function Landing() {
 
+    const isAuthenticated = useSelector((state) => state.user.isAuthenticated)
+
+    const [error, setError] = useState(false)
+    const [message, setMessage] = useState(undefined)
     const [active, setActive] = useState('login')
+
+    useEffect(() => {
+        let _isMounted = true
+
+        if(_isMounted && isAuthenticated)
+            window.location.href = '/notes'
+
+        return () => {
+            _isMounted = false
+        }
+    })
 
     return (
         <div className="background">
+            <Snackbar
+                open={error}
+                autoHideDuration={2500}
+                onClose={() => setError(false)}
+                TransitionComponent={TransitionUp}
+            >
+                <Alert elevation={6} variant="filled" severity="warning">{message}</Alert>
+            </Snackbar>
             <div className="welcome">
                 <svg width="124.415" height="96.703" viewBox="0 0 124.415 96.703">
                     <defs>
@@ -42,10 +77,10 @@ function Landing() {
                         SIGN UP
                     </button>
                 </div>
-                {
-                    active==="login"? <Login/> : <Signup/>
-                }
-                
+                <div className="row-format">
+                    <Login active={active} setError={() => setError(true)} setMessage={setMessage}/> 
+                    <Signup active={active} setError={() => setError(true)} setMessage={setMessage}/> 
+                </div>
             </div>
         </div>
     )

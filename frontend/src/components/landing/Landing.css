@@ -117,10 +117,14 @@
 }
 
 .inactive {
-    background-color: #b4ada6!important;
+    background-color: #b4ada6 !important;
     color: white;
     font-size: 0.9rem;
     animation: inactive 0.3s ease-in-out forwards;
+}
+
+.hide {
+    display: none;
 }
 
 @keyframes active {
@@ -133,7 +137,6 @@
         color: black;
     }
 }
-
 
 @keyframes inactive {
     from {
@@ -151,3 +154,75 @@
 .state-buttons::-moz-focus-inner {
     border: 0;
 }
+
+@media only screen and (min-width: 800px) {
+    .login, .signup {
+        width: 80%;
+    }
+
+    .state-buttons {
+        animation: none;
+        background-color: rgb(243, 243, 243);
+    }
+
+    .row-format {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    .login-form, .signup-form {
+        margin: 0;
+        width: 100%;
+        padding: 2rem;
+        animation: none;
+    }
+
+    .hide.signup-form, .hide.login-form {
+        margin: 0 !important;
+        opacity: 0.3;
+        filter: blur(0.5px);
+        background-color: #b4ada6;
+        pointer-events: none;
+    }
+
+    .hide {
+        display: flex;
+    }
+}
+
+@media only screen and (min-width: 1200px) {
+    .login, .signup {
+        width: 60%;
+    }
+
+    .state-buttons {
+        animation: none;
+        background-color: rgb(243, 243, 243);
+    }
+
+    .row-format {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    .login-form, .signup-form {
+        margin: 0;
+        width: 100%;
+        padding: 2rem;
+        animation: none;
+    }
+
+    .hide.signup-form, .hide.login-form {
+        margin: 0 !important;
+        opacity: 0.3;
+        filter: blur(0.5px);
+        background-color: #b4ada6;
+        pointer-events: none;
+    }
+
+    .hide {
+        display: flex;
+    }
+} 

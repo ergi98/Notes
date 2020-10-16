@@ -5,12 +5,12 @@ import { useSelector } from 'react-redux'
 
 // Icons
 import SearchSharpIcon from '@material-ui/icons/SearchSharp'
+import AddCircleSharpIcon from '@material-ui/icons/AddCircleSharp'
 
 // Material UI
 import Paper from '@material-ui/core/Paper'
 import InputBase from '@material-ui/core/InputBase'
 import IconButton from '@material-ui/core/IconButton'
-import AddCircleSharpIcon from '@material-ui/icons/AddCircleSharp'
 
 function SearchBar(props) {
 
@@ -35,7 +35,7 @@ function SearchBar(props) {
             author: user,
             text: '',
             title: '',
-            date: new Date().toLocaleDateString('en-GB'),
+            date: new Date().toDateString(),
             time: new Date().toTimeString().split(' ')[0]
         }
 

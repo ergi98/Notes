@@ -10,7 +10,10 @@ function ListView(props) {
             {
                 props.notes.map((note, index) => 
                     <Grow key={note.id} in={true} style={{ transformOrigin: '0 0 0' }} timeout = {300 + index*200}>
-                        <div className="list-note" onClick={() => props.setOpenedNote(note)}>
+                        <div 
+                            className={`list-note ${note.id === props.openendNote?.id? "opened-note" : ""}`}
+                            onClick={() => { props.setOpenedNote(note)}}
+                        >
                             <h3 className="title">{note.title}</h3>
                             <div className="note-info">
                                 <label className="time">{note.time}</label>

@@ -1,13 +1,20 @@
 .container-div {
     background-color: white;
-    margin: 10px 10px 0px 10px;
-    padding: 10px 20px;
-    border-radius: 10px;
+    margin: 10px 10px 20px 10px;
+    border-radius: 20px;
+    flex-grow: 1;
+    overflow: auto;
+    scrollbar-width: none;
+}
+
+.container-div::-webkit-scrollbar {
+    display: none;
 }
 
 .list-note {
+    padding: 10px 20px;
     overflow: hidden;
-    padding: 5px 0px;
+    cursor: pointer;
 }
 
 .list-note:not(:last-child) {
@@ -15,12 +22,31 @@
 }
 
 .time {
+    cursor: pointer;
     margin-right: 10px;
 }
 
 .preview {
+    cursor: pointer;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
     padding-right: 10px;
+}
+
+@media only screen and (min-width: 800px) { 
+    .opened-note {
+        color: white;
+        background: linear-gradient(to right, #e6155e,#ee5a8e)
+        /* background: linear-gradient(to right, #ca3d00, #f07613, #f7aa10); */
+    }
+    
+    .opened-note:hover {
+        cursor: pointer;
+        opacity: 0.9 !important;
+    }
+    
+    .list-note:hover {
+        background-color: rgb(230, 230, 230);
+    }
 }

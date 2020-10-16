@@ -1,5 +1,28 @@
 .main {
-    background-color: #FE621E;
+    background: #ff784e no-repeat center center fixed;
+    position: relative;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.notes {
+    top: 0;
+    left: 0;
+    width: 100%;
+    max-height: 100%;
+    display: flex;
+    z-index: 0 !important;
+    flex-direction: column;
+}
+
+.title-holder {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.no-scroll {
+    overflow: hidden !important;
 }
 
 .logout-icon {
@@ -15,12 +38,136 @@
 }
 
 .header {
-    padding-top: 15px;
     color: white;
-    padding-left: 10px;
 }
 
 .view-buttons {
     padding-top: 20px;
     padding-right: 10px;
+}
+
+.no-note {
+    display: none;
+}
+
+.no-notes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    vertical-align: middle;
+    flex-grow: 1;
+    margin: 10px 10px 20px 10px;
+}
+
+.no-notes-txt {
+    color: #f7f7f7;
+    text-align: center;
+}
+
+.face {
+    stroke: white;
+    stroke-width: 30px;
+    opacity: 0;
+    animation: show-eyes 0.5s 0.2s linear forwards;
+}
+
+.left-eye {
+    fill: white;
+    opacity: 0;
+    animation: show-eyes 0.3s 0.7s linear forwards;   
+}
+
+.right-eye {
+    fill: white;
+    opacity: 0;
+    animation: show-eyes 0.3s 1s linear forwards; 
+}
+
+.mouth {
+    stroke-dasharray: 1500;
+    stroke-dashoffset: 1500;
+    animation: draw-mouth 1s 1.3s linear forwards;
+    stroke: white;
+    stroke-width: 30px;
+}
+
+@keyframes show-eyes {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+  
+@keyframes draw-mouth {
+    to {
+      stroke-dashoffset: 0;
+    }
+}
+
+@media only screen and (min-width: 800px) {
+
+    .main {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .title-holder {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .header-div {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .view-buttons {
+        width: 100%;
+        padding-left: 12px;
+        justify-content: flex-start;
+    }
+
+    .notes {
+        width: 360px;
+    }
+
+    .edit-note-holder {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        padding: 1rem;
+    }
+
+    
+    .no-note {
+        position: absolute;
+        background-color: rgba(255, 255, 255, 0.932);
+        width: 97%;
+        height: 95%;
+        border-radius: 20px;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+    }
+    
+    .hide-placeholder {
+        animation: hide-placeholder 0.5s ease-in-out forwards;    
+    }
+
+    @keyframes hide-placeholder {
+        from {
+            opacity: 1;
+        }
+        to {
+            opacity: 0;
+        }
+    }
+    
+    .no-note-txt {
+        color: rgb(148, 148, 148);
+    }
 }

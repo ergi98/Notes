@@ -1,7 +1,8 @@
 // Actions
 import { 
     LOG_IN, 
-    LOG_OUT, 
+    LOG_OUT,
+    VALIDATE_AUTH,
     UPDATE_NOTES 
 } from '../actions/types'
 
@@ -18,14 +19,27 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 isAuthenticated: true,
-                username: action.payload.username,
-                jwt: action.payload.jwt,
-                notes: action.payload.notes
+                username: action.payload.info.username,
+                jwt: action.payload.auth_token,
+                notes: action.payload.info.notes
             }
         case LOG_OUT:
             return {
                 state: undefined,
                 isAuthenticated: false
+            }
+        case VALIDATE_AUTH:
+            if(action.payload) {
+                return {
+                    ...state,
+                    isAuthenticated: true
+                }
+            }
+            else {
+                return {
+                    state: undefined,
+                    isAuthenticated: false
+                }
             }
         case UPDATE_NOTES:
             return {
