@@ -1,4 +1,6 @@
 export const LOG_IN = 'LOG_IN'
 export const LOG_OUT = 'LOG_OUT'
 export const VALIDATE_AUTH = 'VALIDATE_AUTH'
-export const UPDATE_NOTES = 'UPDATE_NOTES'
+export const ADD_NOTE = 'ADD_NOTE'
+export const UPDATE_NOTE = 'UPDATE_NOTE'
+export const DELETE_NOTE = 'DELETE_NOTE'

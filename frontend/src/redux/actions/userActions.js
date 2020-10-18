@@ -3,7 +3,9 @@ import {
     LOG_IN, 
     LOG_OUT,
     VALIDATE_AUTH,
-    UPDATE_NOTES,
+    ADD_NOTE,
+    UPDATE_NOTE,
+    DELETE_NOTE
 } from '../actions/types'
 
 // Axios
@@ -20,7 +22,11 @@ export const validateAuth = (event) => async (dispatch) => {
 
         return { success: true, res }
     }
-    catch(err) {    
+    catch(err) { 
+        dispatch({
+            type: VALIDATE_AUTH,
+            payload: false
+        })   
         return { success: false, err }    
     }
 }
@@ -85,9 +91,53 @@ export const logOut = (event) => async (dispatch) => {
     }
 }
 
-export const updateNotes = (event) => (dispatch) => {
-    dispatch({
-        type: UPDATE_NOTES,
-        payload: event.notes
-    })
+export const addNote = (event) => async (dispatch) => {
+    try {
+        const uniqid = require('uniqid')
+
+        let note = {
+            id: uniqid(),
+            text: '<h1>Untitled Note</h1>',
+            title: 'Untitled Note',
+            created_at: new Date(),
+            updated_at: new Date()
+        }
+        let res = await axios.post('/users/add-note', { username: event.username, note})
+        dispatch({
+            type: ADD_NOTE,
+            payload: note
+        })
+        return { success: true, note, res }
+    }
+    catch(err) {
+        return { success: false, err } 
+    }
+}
+
+export const updateNote = (event) => async (dispatch) => {
+    try {
+        let res = await axios.post('/users/update-note', event)
+        dispatch({
+            type: UPDATE_NOTE,
+            payload: event.note
+        })
+        return { success: true, res }
+    }
+    catch(err) {
+        return { success: false, err } 
+    }
+}
+
+export const deleteNote = (event) => async (dispatch) => {
+    try {
+        let res = await axios.post('/users/delete-note', event)
+        dispatch({
+            type: DELETE_NOTE,
+            payload: event
+        })
+        return { success: true, res }
+    }
+    catch(err) {
+        return { success: false, err } 
+    }
 }

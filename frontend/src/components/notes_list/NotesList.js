@@ -2,11 +2,10 @@ import React, { useState } from 'react'
 import './NotesList.css'
 
 // Redux
-import { logOut } from '../../redux/actions/userActions'
+import { logOut, addNote } from '../../redux/actions/userActions'
 import { useDispatch, useSelector } from 'react-redux'
 
 // Components
-import SearchBar from './SearchBar'
 import ListView from './ListView'
 import GalleryView from './GalleryView'
 import EditNote from '../edit_note/EditNote'
@@ -15,26 +14,50 @@ import EditNote from '../edit_note/EditNote'
 import ViewModuleSharpIcon from '@material-ui/icons/ViewModuleSharp'
 import ReorderSharpIcon from '@material-ui/icons/ReorderSharp'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
+import SearchSharpIcon from '@material-ui/icons/SearchSharp'
+import AddCircleSharpIcon from '@material-ui/icons/AddCircleSharp'
 
 // Material UI
+import Paper from '@material-ui/core/Paper'
+import InputBase from '@material-ui/core/InputBase'
+import IconButton from '@material-ui/core/IconButton'
 import ButtonGroup from '@material-ui/core/ButtonGroup'
 import Button from '@material-ui/core/Button'
-import IconButton from '@material-ui/core/IconButton'
 
 function NotesList() {
 
+    let interval
     const dispatch = useDispatch()
+
     const username = useSelector((state) => state.user.username)
     const allNotes = useSelector((state) => state.user.notes)
 
     const [view, setView] = useState("list")
-    const [notes, setNotes] = useState(allNotes)
+    const [filter, setFilter] = useState('')
     const [openendNote, setOpenedNote] = useState(undefined)
 
     async function logout() {
         let res = await dispatch(logOut({username}))
-        if(res.success) {
-            window.location = '/'
+        if(res.success)
+            window.location.href = '/'
+    }
+
+    function filterNotes(event) {
+        let text = event.target.value
+        clearTimeout(interval)
+        interval = setTimeout(() => { setFilter(text) }, 1000, text)
+    }
+
+    async function add() {
+        let res = await dispatch(addNote({username}))
+        console.log(res)
+        // If the note was created
+        if(res.success)
+            // Open it on the editor
+            setOpenedNote(res.note)
+        // If there was an error
+        else {
+            // Display the error
         }
     }
 
@@ -63,13 +86,36 @@ function NotesList() {
                         >Gallery</Button>
                     </ButtonGroup>
                 </div>
-                <SearchBar setNotes={setNotes} setOpenedNote={setOpenedNote}/>
+                <div style={{padding: "10px", display: "flex"}}>
+                    <Paper component="form" style={{display:"flex", flexGrow: "1"}}>
+                        <IconButton aria-label="menu">
+                            <SearchSharpIcon />
+                        </IconButton>
+                        <InputBase
+                            style={{flexGrow: "1"}}
+                            placeholder="Search Notes"
+                            inputProps={{ 'aria-label': 'search notes' }}
+                            onChange={filterNotes}
+                        />
+                    </Paper>
+                    <IconButton aria-label="menu" onClick={add}>
+                        <AddCircleSharpIcon style={{color:"White"}} fontSize="large"/>
+                    </IconButton>
+                </div>
                 {
                     allNotes?.length >= 1? 
                         view === "list"?
-                            <ListView notes={notes} openendNote={openendNote} setOpenedNote={setOpenedNote}/> 
+                            <ListView 
+                                notes={ filter === ''? allNotes : allNotes.filter(note => note.title.toLowerCase().includes(filter.toLowerCase())) } 
+                                openendNote={openendNote} 
+                                setOpenedNote={setOpenedNote}
+                            /> 
                             :
-                            <GalleryView notes={notes} openendNote={openendNote} setOpenedNote={setOpenedNote}/>
+                            <GalleryView 
+                                notes={ filter === ''? allNotes : allNotes.filter(note => note.title.toLowerCase().includes(filter.toLowerCase())) } 
+                                openendNote={openendNote} 
+                                setOpenedNote={setOpenedNote}
+                            />
                         :
                         <div className="no-notes">
                             <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"

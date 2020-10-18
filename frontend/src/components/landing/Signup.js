@@ -63,7 +63,7 @@ function Signup(props) {
         }
         else {
             // Set error message and display alert
-            props.setMessage(res.err.response.data.error)
+            props.setMessage(res?.err?.response?.data?.error || "An error occured while signing up!")
             props.setError()
         }
     } 

@@ -31,7 +31,7 @@ function Login(props) {
         }
         else {
             // Set error message and display alert
-            props.setMessage(res.err.response.data.error)
+            props.setMessage(res?.err?.response?.data?.error || "An error occured while logging in!")
             props.setError()
         }
     } 

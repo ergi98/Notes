@@ -1,6 +1,9 @@
 import React from 'react'
 import './ListView.css'
 
+// Helpers
+import { removeHTML, DisplayDate } from '../../helpers'
+
 // Material UI
 import Grow from '@material-ui/core/Grow'
 
@@ -16,8 +19,8 @@ function ListView(props) {
                         >
                             <h3 className="title">{note.title}</h3>
                             <div className="note-info">
-                                <label className="time">{note.time}</label>
-                                <label className="preview">{note.text.substring(0, 20)}</label>
+                                <label className="time"><DisplayDate date={note.updated_at}/></label>
+                                <label className="preview">{removeHTML(note.text.substring(0, 25))}</label>
                             </div>
                         </div>
                     </Grow>

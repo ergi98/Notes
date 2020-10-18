@@ -1,6 +1,9 @@
 import React from 'react'
 import './GalleryView.css'
 
+// Helpers
+import { DisplayDate } from '../../helpers'
+
 // Material UI
 import Grow from '@material-ui/core/Grow'
 
@@ -16,7 +19,7 @@ function GalleryView(props) {
                                 </p>
                                 <div className={`grid-note-info ${note.id === props.openendNote?.id? "opened-note" : ""}`}>
                                     <h4 className={`grid-title ${note.id === props.openendNote?.id? "white" : ""}`}>{note.title}</h4>
-                                    <label className={`grid-time ${note.id === props.openendNote?.id? "white" : ""}`}>{note.time}</label>
+                                    <label className={`grid-time ${note.id === props.openendNote?.id? "white" : ""}`}><DisplayDate date={note.updated_at}/></label>
                                 </div>
                             </div>
                         </div>

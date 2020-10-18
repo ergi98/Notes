@@ -199,7 +199,7 @@ class UsersDAO {
           $set: { 
             'notes.$[note].title': note.title,
             'notes.$[note].text': note.text,
-            'notes.$[note].last_edited': note.last_edited, 
+            'notes.$[note].updated_at': note.updated_at, 
           } 
         }, 
         { 

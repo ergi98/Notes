@@ -3,7 +3,9 @@ import {
     LOG_IN, 
     LOG_OUT,
     VALIDATE_AUTH,
-    UPDATE_NOTES 
+    ADD_NOTE,
+    UPDATE_NOTE,
+    DELETE_NOTE
 } from '../actions/types'
 
 const initialState = {
@@ -41,11 +43,34 @@ export default function(state = initialState, action) {
                     isAuthenticated: false
                 }
             }
-        case UPDATE_NOTES:
+        case  ADD_NOTE: {
+            console.log(action.payload)
+            let addTemp = [...state.notes]
+            addTemp.unshift(action.payload)
             return {
                 ...state,
-                notes: action.payload
+                notes: addTemp
             }
+        }
+        case UPDATE_NOTE: {
+            let updateTemp = [...state.notes]
+            // Updating the note changed by the user
+            let index = updateTemp.findIndex(note => note.id === action.payload.id)
+            updateTemp.splice(index, 1, action.payload)
+            return {
+                ...state,
+                notes: updateTemp
+            }
+        }
+        case DELETE_NOTE: {
+            let deleteTemp = [...state.notes]
+            // Filter the deleted note
+            deleteTemp = deleteTemp.filter(tmp => { return tmp.id !== action.payload.id  })
+            return {
+                ...state,
+                notes: deleteTemp
+            }
+        }
         default: 
             return state
     }
