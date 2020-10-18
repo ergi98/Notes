@@ -27,7 +27,7 @@ function Routes() {
         _isMounted && validate()
 
         return () => { _isMounted = false }
-    })
+    }, [dispatch, jwt, username])
     
     return (
         <BrowserRouter>

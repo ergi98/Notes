@@ -23,10 +23,6 @@ export const validateAuth = (event) => async (dispatch) => {
         return { success: true, res }
     }
     catch(err) { 
-        dispatch({
-            type: VALIDATE_AUTH,
-            payload: false
-        })   
         return { success: false, err }    
     }
 }
