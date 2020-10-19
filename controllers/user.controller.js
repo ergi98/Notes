@@ -4,6 +4,26 @@ const UsersDAO = require('../dao/usersDAO')
 
 const hashPassword = async password => await bcrypt.hash(password, 10)
 
+const verify = async(userJwt) => {
+    return jwt.verify(userJwt, process.env.SECRET_KEY, (error, res) => {
+        if (error) {
+            console.log("here is an error")
+            return false
+        }
+        return true
+    })
+}
+
+const validateToken = async (bearer) => {
+    if(typeof bearer !== undefined ) {
+        const jwt = bearer.split(' ')[1]
+        return await verify(jwt)
+    }
+    else {
+        return false
+    }
+}
+
 class User {
     constructor({ username, password, notes } = {}) {
         this.username = username
@@ -28,30 +48,13 @@ class User {
             process.env.SECRET_KEY,
         )
     }
-
-    static async decoded(userJwt) {
-        return jwt.verify(userJwt, process.env.SECRET_KEY, (error, res) => {
-            if (error) {
-                return { error }
-            }
-            return new User(res)
-        })
-    }
 }
 
 class UsersController {
+
     static async login(req, res) {
         try {
             const { username, password } = req.body
-
-            if (!username || typeof username !== 'string') {
-                res.status(400).json({ error: 'Bad username format, expected string.' })
-                return
-            }
-            if (!password || typeof password !== 'string') {
-                res.status(400).json({ error: 'Bad password format, expected string.' })
-                return
-            }
 
             let userData = await UsersDAO.getUser(username)
 
@@ -67,58 +70,10 @@ class UsersController {
                 return
             }
 
-            const loginResponse = await UsersDAO.loginUser(user.username, user.encoded())
-
-            if (!loginResponse.success) {
-                res.status(500).json({ error: loginResponse.error })
-                return
-            }
-
             // On success return the auth_token and all the user info
             res.json({ auth_token: user.encoded(), info: user.toJson() })
+            
         } catch (e) {
-            res.status(400).json({ error: e })
-            return
-        }
-    }
-
-    static async getSession(req, res) {
-        try {
-            const { username } = req.body
-
-            let session = await UsersDAO.getUserSession(username)
-
-            if(!session) {
-                res.status(401).json({ error: 'Session not found for this user.' })
-                return
-            }
-            res.json({ session })
-        }
-        catch (e) {
-            res.status(400).json({ error: e })
-            return
-        }
-    }
-
-    static async logout(req, res) {
-        try {
-            const { username } = req.body
-
-            if(!username || typeof username !== 'string') {
-                res.status(400).json({ error: 'Bad username format, expected string.' })
-                return
-            }
-            
-            let result = await UsersDAO.logoutUser(username)
-
-            if(!result.success) {
-                res.status(401).json({ error: 'Session not found for this user.' })
-                return
-            }
-            
-            res.json({ result })
-        }
-        catch (e) {
             res.status(400).json({ error: e })
             return
         }
@@ -160,21 +115,6 @@ class UsersController {
             res.json({ result })
         }
         catch (e) {
-            console.log(e)
-            res.status(400).json({ error: e })
-            return
-        }
-    }
-
-    static async getUserNotes(req, res) {
-        try {
-            let { username } = req.body
-
-            let result = await UsersDAO.getUserNotes(username)
-
-            res.json({ result })
-        }
-        catch(e) {
             res.status(400).json({ error: e })
             return
         }
@@ -182,10 +122,16 @@ class UsersController {
 
     static async addNote(req, res) {
         try {
+            const bearer = req.headers['authorization']
             let { username, note } = req.body
 
-            let result = await UsersDAO.addNote(username, note)
-            res.json({ result })
+            if(await validateToken(bearer)) {
+                    let result = await UsersDAO.addNote(username, note)
+                    res.json({ result })
+            }
+            else {
+                res.status(403).json({ error: "Invalid token!"})
+            }
         }
         catch(e) {
             res.status(400).json({ error: e })
@@ -195,11 +141,16 @@ class UsersController {
 
     static async updateNote(req, res) {
         try {
+            const bearer = req.headers['authorization']
             let { username, note } = req.body
 
-            let result = await UsersDAO.updateNote(username, note)
-
-            res.json({ result })
+            if(await validateToken(bearer)) {
+                let result = await UsersDAO.updateNote(username, note)
+                res.json({ result })
+            }
+            else {
+                res.status(403).json({ error: "Invalid token!"})
+            }
         }
         catch(e) {
             res.status(400).json({ error: e })
@@ -209,11 +160,16 @@ class UsersController {
 
     static async deleteNote(req, res) {
         try {
+            const bearer = req.headers['authorization']
             let { username, id } = req.body
 
-            let result = await UsersDAO.deleteNote(username, id)
-            
-            res.json({ result })
+            if(await validateToken(bearer)) {
+                let result = await UsersDAO.deleteNote(username, id)
+                res.json({ result })
+            }
+            else {
+                res.status(403).json({ error: "Invalid token!"})
+            }
         }
         catch(e) {
             res.status(400).json({ error: e })

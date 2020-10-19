@@ -1,17 +1,15 @@
 let users
-let sessions
 
 class UsersDAO {
 
   ObjectID = require('mongodb').ObjectID
   
   static async injectDB(conn) {
-    if (users && sessions) {
+    if (users) {
       return
     }
     try {
       users = await conn.db(process.env.MONOG_NS).collection('users')
-      sessions = await conn.db(process.env.MONOG_NS).collection('sessions')
     } catch (e) {
       console.error(`Unable to establish collection handles in userDAO: ${e}`)
     }
@@ -89,41 +87,6 @@ class UsersDAO {
     return await users.aggregate(pipeline).toArray()
   }
 
-  static async loginUser(username, jwt) {
-    try {
-      await sessions.updateOne(
-        { username },
-        { $set: { jwt } },
-        { upsert: true }
-      )
-      return { success: true }
-    }
-    catch (e) {
-      console.log(`Error occurred while logging in user, ${e}`)
-      return { success: false, error: e }
-    }
-  }
-
-  static async getUserSession(username) {
-    try {
-      return sessions.findOne({ username })
-    } catch (e) {
-      console.error(`Error occurred while retrieving user session, ${e}`)
-      return { success: false, error: e }
-    }
-  }
-
-  static async logoutUser(username) {
-    try {
-      await sessions.deleteOne({ username })
-      return { success: true }
-    }
-    catch (e) {
-      console.log(`Error occurred while logging out user, ${e}`)
-      return { success: false, error: e }
-    }
-  }
-
   static async updatePassword(username, password) {
     try {
       await users.updateOne(
@@ -134,48 +97,6 @@ class UsersDAO {
     }
     catch (e) {
       console.log(`Error occured while updating password, ${e}`)
-      return { success: false, error: e }
-    }
-
-  }
-
-  static async deleteUser(username) {
-    try {
-      await users.deleteOne({ username })
-      await sessions.deleteOne({ username })
-      if (!(await this.getUser(username)) && !(await this.getUserSession(username))) {
-        return { success: true }
-      } else {
-        return { success: false, error: `Deletion unsuccessful` }
-      }
-    } catch (e) {
-      console.error(`Error occurred while deleting user, ${e}`)
-      return { success: false, error: e }
-    }
-  }
-
-  static async getUserNotes(username) {
-    try {
-      let pipeline = [
-        {
-          $match: {
-            username: username
-          }
-        },
-        {
-          $project: {
-            _id: 0,
-            notes: 1
-          }
-        }
-      ]
-
-      let res = await users.aggregate(pipeline)
-
-      return await res.toArray()
-    }
-    catch (e) {
-      console.error(`Error occurred while popoulating notes, ${e}`)
       return { success: false, error: e }
     }
   }

@@ -36,6 +36,7 @@ function EditNote(props) {
     const [hasChanged, setHasChanged] = useState(false)
 
     const dispatch = useDispatch()
+    const jwt = useSelector((state) => state.user.jwt)
     const username = useSelector((state) => state.user.username)
 
     const [text, setText] = useState(undefined)
@@ -71,7 +72,7 @@ function EditNote(props) {
             new_note.title = removeHTML(new_note.text).substring(0,20)
             new_note.updated_at = new Date()
 
-            let res = await dispatch(updateNote({username, note: new_note}))
+            let res = await dispatch(updateNote({username, note: new_note, jwt}))
 
             if(res.success) {
                 setMessage("Changes saved!")
@@ -105,7 +106,7 @@ function EditNote(props) {
     }
 
     async function removeNote(username, id) {
-        let res = await dispatch(deleteNote({username, id}))
+        let res = await dispatch(deleteNote({username, id, jwt}))
         if(res.success) {
             setMessage("Note deleted!")
             setSuccess(res.success)

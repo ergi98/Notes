@@ -2,7 +2,6 @@
 import { 
     LOG_IN, 
     LOG_OUT,
-    VALIDATE_AUTH,
     ADD_NOTE,
     UPDATE_NOTE,
     DELETE_NOTE
@@ -30,21 +29,7 @@ export default function(state = initialState, action) {
                 state: undefined,
                 isAuthenticated: false
             }
-        case VALIDATE_AUTH:
-            if(action.payload) {
-                return {
-                    ...state,
-                    isAuthenticated: true
-                }
-            }
-            else {
-                return {
-                    state: undefined,
-                    isAuthenticated: false
-                }
-            }
         case  ADD_NOTE: {
-            console.log(action.payload)
             let addTemp = [...state.notes]
             addTemp.unshift(action.payload)
             return {

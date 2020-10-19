@@ -23,23 +23,33 @@ import InputBase from '@material-ui/core/InputBase'
 import IconButton from '@material-ui/core/IconButton'
 import ButtonGroup from '@material-ui/core/ButtonGroup'
 import Button from '@material-ui/core/Button'
+import Alert from '@material-ui/lab/Alert'
+import Snackbar from '@material-ui/core/Snackbar'
+import Slide from '@material-ui/core/Slide'
+
+function TransitionUp(props) {
+    return <Slide {...props} direction="up" />
+}
 
 function NotesList() {
 
     let interval
     const dispatch = useDispatch()
 
+    const [error, setError] = useState(false)
+    const [message, setMessage] = useState(undefined)
+
     const username = useSelector((state) => state.user.username)
     const allNotes = useSelector((state) => state.user.notes)
+    const jwt = useSelector((state) => state.user.jwt)
 
     const [view, setView] = useState("list")
     const [filter, setFilter] = useState('')
     const [openendNote, setOpenedNote] = useState(undefined)
 
     async function logout() {
-        let res = await dispatch(logOut({username}))
-        if(res.success)
-            window.location.href = '/'
+        dispatch(logOut())
+        window.location.href = '/'
     }
 
     function filterNotes(event) {
@@ -49,20 +59,30 @@ function NotesList() {
     }
 
     async function add() {
-        let res = await dispatch(addNote({username}))
-        console.log(res)
+        let res = await dispatch(addNote({username, jwt}))
+        
         // If the note was created
         if(res.success)
             // Open it on the editor
             setOpenedNote(res.note)
         // If there was an error
         else {
-            // Display the error
+            // Display error message
+            setMessage(res?.err?.response?.data?.error || "An error occured while saving changes!")
+            setError(true)           
         }
     }
 
     return (
         <div className="main">
+            <Snackbar
+                open={error}
+                autoHideDuration={2500}
+                onClose={() => setError(false)}
+                TransitionComponent={TransitionUp}
+            >
+                <Alert elevation={6} variant="filled" severity="warning">{message}</Alert>
+            </Snackbar>
             <div className="notes">
                 <div className="header-div">
                     <div className="title-holder">

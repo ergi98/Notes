@@ -2,7 +2,6 @@
 import { 
     LOG_IN, 
     LOG_OUT,
-    VALIDATE_AUTH,
     ADD_NOTE,
     UPDATE_NOTE,
     DELETE_NOTE
@@ -10,22 +9,6 @@ import {
 
 // Axios
 import axios from 'axios'
-
-export const validateAuth = (event) => async (dispatch) => {
-    try {
-        let res = await axios.post(`/users/session`, { username: event.username })
-        
-        dispatch({
-            type: VALIDATE_AUTH,
-            payload: res.data.session.jwt === event.jwt
-        })
-
-        return { success: true, res }
-    }
-    catch(err) { 
-        return { success: false, err }    
-    }
-}
 
 export const signUp = (event) => async (dispatch) => {
     try {
@@ -73,18 +56,10 @@ export const logIn = (event) => async (dispatch) => {
     }
 }
 
-export const logOut = (event) => async (dispatch) => {
-    try {
-        let res = await axios.post('/users/logout', { username: event.username })
-        dispatch({
-            type: LOG_OUT,
-            payload: res
-        })
-        return { success: true, res }
-    }   
-    catch(err) {
-        return { success: false, err } 
-    }
+export const logOut = () => (dispatch) => {
+    dispatch({
+        type: LOG_OUT
+    })
 }
 
 export const addNote = (event) => async (dispatch) => {
@@ -98,21 +73,38 @@ export const addNote = (event) => async (dispatch) => {
             created_at: new Date(),
             updated_at: new Date()
         }
-        let res = await axios.post('/users/add-note', { username: event.username, note})
+
+        let res = await axios.post(
+            '/users/add-note', 
+            { username: event.username, note}, 
+            { headers: { Authorization: `Bearer ${event.jwt}`}}
+        )
+
         dispatch({
             type: ADD_NOTE,
             payload: note
         })
         return { success: true, note, res }
+        
     }
     catch(err) {
+        // If no token is present logout
+        if(err.message.includes('403')) {
+            dispatch({
+                type: LOG_OUT
+            })
+        }
         return { success: false, err } 
     }
 }
 
 export const updateNote = (event) => async (dispatch) => {
     try {
-        let res = await axios.post('/users/update-note', event)
+        let res = await axios.post(
+            '/users/update-note', 
+            event,
+            { headers: { Authorization: `Bearer ${event.jwt}`}}
+        )
         dispatch({
             type: UPDATE_NOTE,
             payload: event.note
@@ -120,13 +112,23 @@ export const updateNote = (event) => async (dispatch) => {
         return { success: true, res }
     }
     catch(err) {
+        // If no token is present logout
+        if(err.message.includes('403')) {
+            dispatch({
+                type: LOG_OUT
+            })
+        }
         return { success: false, err } 
     }
 }
 
 export const deleteNote = (event) => async (dispatch) => {
     try {
-        let res = await axios.post('/users/delete-note', event)
+        let res = await axios.post(
+            '/users/delete-note', 
+            event,
+            { headers: { Authorization: `Bearer ${event.jwt}`}}
+        )
         dispatch({
             type: DELETE_NOTE,
             payload: event
@@ -134,6 +136,12 @@ export const deleteNote = (event) => async (dispatch) => {
         return { success: true, res }
     }
     catch(err) {
+        // If no token is present logout
+        if(err.message.includes('403')) {
+            dispatch({
+                type: LOG_OUT
+            })
+        }
         return { success: false, err } 
     }
 }
