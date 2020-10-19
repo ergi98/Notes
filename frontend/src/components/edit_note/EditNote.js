@@ -76,6 +76,7 @@ function EditNote(props) {
             if(res.success) {
                 setMessage("Changes saved!")
                 setSuccess(res.success)
+                setHasChanged(false)
             }
             // If unsuccessful
             else{
@@ -123,7 +124,6 @@ function EditNote(props) {
         setText(value)
         // Only save the note contents when the user types
         if(caller === "user") {
-            console.log("here")
             setHasChanged(true)
             update(username, props.note, value)
         }
