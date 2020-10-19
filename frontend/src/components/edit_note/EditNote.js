@@ -33,6 +33,8 @@ function EditNote(props) {
     const [success, setSuccess] = useState(false)
     const [updateDate, setUpdateDate] = useState(undefined)
 
+    const [hasChanged, setHasChanged] = useState(false)
+
     const dispatch = useDispatch()
     const username = useSelector((state) => state.user.username)
 
@@ -43,6 +45,7 @@ function EditNote(props) {
 
     useEffect(() => {
         if (props.note !== undefined) {  
+            setHasChanged(false)
             setText(props.note.text)
             setUpdateDate(props.note.updated_at)
             setShow(true)
@@ -88,8 +91,9 @@ function EditNote(props) {
     function closeNote() {
         // If the previous text does not equal the current text
         if(removeHTML(text) !== ''){
-            // Save the note in the database
-            update(username, props.note, text)
+            if(hasChanged)
+                // Save the note in the database
+                update(username, props.note, text)
         }
         // If the note is empty when use exits delete it
         else {
@@ -118,8 +122,11 @@ function EditNote(props) {
     async function handleChange(value, delta, caller) {
         setText(value)
         // Only save the note contents when the user types
-        if(caller === "user")
+        if(caller === "user") {
+            console.log("here")
+            setHasChanged(true)
             update(username, props.note, value)
+        }
     }
 
     return (
