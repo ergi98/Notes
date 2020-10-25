@@ -7,7 +7,6 @@ const hashPassword = async password => await bcrypt.hash(password, 10)
 const verify = async(userJwt) => {
     return jwt.verify(userJwt, process.env.SECRET_KEY, (error, res) => {
         if (error) {
-            console.log("here is an error")
             return false
         }
         return true

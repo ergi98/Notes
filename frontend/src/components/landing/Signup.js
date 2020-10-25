@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react'
 
-// Axios
-import axios from 'axios'
-
 // Redux
 import { useDispatch } from 'react-redux'
 import { signUp } from '../../redux/actions/userActions'
@@ -19,33 +16,12 @@ import Button from '@material-ui/core/Button'
 function Signup(props) {
     
     const dispatch = useDispatch()
-    const [usernames, setUsernames] = useState([])
 
     const login_schema = yup.object({
-        new_username: yup.string().required("Username is required!").matches(/^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,15}$/igm, { message: "Username format is not correct!" }).notOneOf(usernames, "This username already exists!"),
+        new_username: yup.string().required("Username is required!").matches(/^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,15}$/igm, { message: "Username format is not correct!" }),
         new_password: yup.string().required("Password is required").min(4, "Password must be more than 4 characters!").max(15, "Password can't be more than 15 characters!"),
         confirm: yup.string().required("Please confirm your passsword!").oneOf([yup.ref('new_password')], "Passwords must match!")
     })
-
-    async function getUsernames() {
-        try {
-            let res = await axios.get('/users/usernames')
-            let temp = res.data.result.map(res => { return res.username })
-            setUsernames(temp)
-        }
-        catch(err){
-            console.log(err)
-        }
-    }
-
-    useEffect(() => {
-        let _isMounted = true
-
-        _isMounted && getUsernames()
-        return () => {
-            _isMounted = false
-        }
-    }, [])
 
     async function validateUser(event) {
         // Shaping the user
