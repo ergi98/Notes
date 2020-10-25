@@ -48,7 +48,7 @@ function NotesList() {
     const [openendNote, setOpenedNote] = useState(undefined)
 
     async function logout() {
-        dispatch(logOut())
+        await dispatch(logOut())
         window.location.href = '/'
     }
 
